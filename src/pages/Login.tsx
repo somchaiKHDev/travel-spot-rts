@@ -122,11 +122,11 @@ const Login = (props: { disableCustomTheme?: boolean }) => {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
-        <ColorModeSelect
+        {/* <ColorModeSelect
           sx={{ position: "fixed", top: "1rem", right: "1rem" }}
-        />
+        /> */}
         <Card variant="outlined">
-          <SitemarkIcon />
+          {/* <SitemarkIcon /> */}
           <Typography
             component="h1"
             variant="h4"

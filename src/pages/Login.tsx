@@ -21,6 +21,8 @@ import {
   FacebookIcon,
   SitemarkIcon,
 } from "../components/CustomIcons";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -79,16 +81,26 @@ const Login = (props: { disableCustomTheme?: boolean }) => {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (emailError || passwordError) {
-      event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    const email = data.get("email")?.toString() ?? "";
+    const password = data.get("password")?.toString() ?? "";
+
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      if (result) {
+        alert("Login success!");
+      } else {
+        alert("Login wrong!");
+      }
+    } catch (err: any) {
+      console.log("err", err.message);
+    }
   };
 
   const validateInputs = () => {

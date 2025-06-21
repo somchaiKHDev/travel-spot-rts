@@ -23,6 +23,7 @@ import {
 } from "../components/CustomIcons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -67,6 +68,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const Login = (props: { disableCustomTheme?: boolean }) => {
+  const navigate = useNavigate();
+  
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
@@ -94,7 +97,7 @@ const Login = (props: { disableCustomTheme?: boolean }) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       if (result) {
-        alert("Login success!");
+        navigate('/')
       } else {
         alert("Login wrong!");
       }

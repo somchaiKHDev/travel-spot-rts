@@ -10,17 +10,13 @@ import AppTheme from "../shared-theme/AppTheme";
 import SideMenu from "./dashboard/components/SideMenu";
 import AppNavbar from "./dashboard/components/AppNavbar";
 import Header from "./dashboard/components/Header";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "../firebase";
 import Dashboard from "./dashboard/Dashboard";
+import NotFound from "./NotFound";
 
 const Layout = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -37,50 +33,67 @@ const Layout = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <AppTheme>
-      <CssBaseline enableColorScheme />
-      <Box sx={{ display: "flex" }}>
-        <SideMenu />
-        <AppNavbar />
-        {/* Main content */}
-        <Box
-          component="main"
-          sx={(theme: any) => ({
-            flexGrow: 1,
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-              : alpha(theme.palette.background.default, 1),
-            overflow: "auto",
-          })}
-        >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: "center",
-              mx: 3,
-              pb: 5,
-              mt: { xs: 8, md: 0 },
-            }}
-          >
-            <Header />
-              <Routes>
-                <Route
-                  path="/"
-                  element={user ? <Navigate to="/dashboard" /> : <Login />}
-                />
-                <Route
-                  path="/login"
-                  element={user ? <Navigate to="/login" /> : <Login />}
-                />
-                <Route
-                  path="/dashboard"
-                  element={user ? <Dashboard /> : <Navigate to="/" />}
-                />
-              </Routes>
-          </Stack>
-        </Box>
-      </Box>
-    </AppTheme>
+    <>
+      {user ? (
+        <AppTheme>
+          <CssBaseline enableColorScheme />
+          <Box sx={{ display: "flex" }}>
+            <SideMenu />
+            <AppNavbar />
+
+            {/* Main content */}
+            <Box
+              component="main"
+              sx={(theme: any) => ({
+                flexGrow: 1,
+                backgroundColor: theme.vars
+                  ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+                  : alpha(theme.palette.background.default, 1),
+                overflow: "auto",
+              })}
+            >
+              <Stack
+                spacing={2}
+                sx={{
+                  alignItems: "center",
+                  mx: 3,
+                  pb: 5,
+                  mt: { xs: 8, md: 0 },
+                }}
+              >
+                <Header />
+                <Routes>
+                  <Route
+                    path="/"
+                    element={user ? <Navigate to="/dashboard" /> : <Login />}
+                  />
+
+                  <Route
+                    path="/dashboard"
+                    element={user ? <Dashboard /> : <Navigate to="/" />}
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Stack>
+            </Box>
+          </Box>
+        </AppTheme>
+      ) : (
+        <>
+          <Routes>
+            <Route
+              path="/"
+              element={user ? <Navigate to="/login" /> : <Login />}
+            />
+            <Route
+              path="/login"
+              element={user ? <Navigate to="/login" /> : <Login />}
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </>
+      )}
+    </>
   );
 };
 

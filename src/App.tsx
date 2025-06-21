@@ -1,8 +1,11 @@
-import Login from './pages/Login'
+import { BrowserRouter as Router } from "react-router-dom";
+import Layout from "./pages/Layout";
 
 function App() {
   return (
-    <Login />
+    <Router>
+      <Layout />
+    </Router>
     // <>
     //   <div>
     //     <a href="https://vite.dev" target="_blank">
@@ -25,7 +28,7 @@ function App() {
     //     Click on the Vite and React logos to learn more
     //   </p>
     // </>
-  )
+  );
 }
 
-export default App
+export default App;

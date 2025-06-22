@@ -15,6 +15,7 @@ import Login from "./Login";
 import Dashboard from "./dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { useAuth } from "../contexts/AuthContext";
+import SignUp from "./SignUp";
 
 const Layout = () => {
   const { user, loading } = useAuth();
@@ -72,12 +73,13 @@ const Layout = () => {
           <Routes>
             <Route
               path="/"
-              element={user ? <Navigate to="/login" /> : <Login />}
+              element={user ? <Navigate to="/sign-in" /> : <Login />}
             />
             <Route
-              path="/login"
-              element={user ? <Navigate to="/login" /> : <Login />}
+              path="/sign-in"
+              element={user ? <Navigate to="/sign-in" /> : <Login />}
             />
+            <Route path="/sign-up" element={<SignUp />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </>

@@ -12,23 +12,12 @@ import AppNavbar from "./dashboard/components/AppNavbar";
 import Header from "./dashboard/components/Header";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
-import { useEffect, useState } from "react";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "../firebase";
 import Dashboard from "./dashboard/Dashboard";
 import NotFound from "./NotFound";
+import { useAuth } from "../contexts/AuthContext";
 
 const Layout = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setLoading(false);
-    });
-    return () => unsub();
-  }, []);
+  const { user, loading } = useAuth();
 
   if (loading) return <div>Loading...</div>;
 
@@ -38,7 +27,7 @@ const Layout = () => {
         <AppTheme>
           <CssBaseline enableColorScheme />
           <Box sx={{ display: "flex" }}>
-            <SideMenu />
+            <SideMenu user={user} />
             <AppNavbar />
 
             {/* Main content */}

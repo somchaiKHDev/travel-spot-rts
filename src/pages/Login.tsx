@@ -21,7 +21,11 @@ import {
   FacebookIcon,
   SitemarkIcon,
 } from "../components/CustomIcons";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
@@ -69,7 +73,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 const Login = (props: { disableCustomTheme?: boolean }) => {
   const navigate = useNavigate();
-  
+
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
@@ -84,7 +88,7 @@ const Login = (props: { disableCustomTheme?: boolean }) => {
     setOpen(false);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (emailError || passwordError) {
       return;
@@ -97,12 +101,22 @@ const Login = (props: { disableCustomTheme?: boolean }) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       if (result) {
-        navigate('/')
+        navigate("/");
       } else {
         alert("Login wrong!");
       }
     } catch (err: any) {
       console.log("err", err.message);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      navigate("/");
+    } catch (error) {
+      console.error("Google Sign-In Error:", error);
     }
   };
 
@@ -151,7 +165,7 @@ const Login = (props: { disableCustomTheme?: boolean }) => {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleSignIn}
             noValidate
             sx={{
               display: "flex",
@@ -222,7 +236,7 @@ const Login = (props: { disableCustomTheme?: boolean }) => {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert("Sign in with Google")}
+              onClick={handleGoogleSignIn}
               startIcon={<GoogleIcon />}
             >
               Sign in with Google
